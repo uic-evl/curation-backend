@@ -18,9 +18,12 @@ WORKDIR /root
 ENV PORT=8000
 ENV IMPORTS=/root/curation-backend/imports
 ENV PIPELINE=/root/pipeline
+ENV FILES_LOCATION=/mnt/files
 
 RUN git clone https://github.com/uic-evl/curation-backend.git \
     && cd curation-backend \
-    && npm start
+    && npm install
+WORKDIR /root/curation-backend
 
-# docker run -it -p 8000:8000 -v /mnt:/where/static/files/are curation/backend:0.1 /bin/bash
+# docker run -it -p 8000:8000 -v /where/static/files/are:/mnt/files IMAGE_TAG:VERSION sh -c 'npm start'
+# docker run -it -p 8000:8000 -v /mnt/c/Users/jtt/Documents:/mnt/files node:1.0 sh -c 'npm start'
