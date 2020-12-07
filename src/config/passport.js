@@ -4,6 +4,7 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as JwtStrategy } from "passport-jwt";
 import { ExtractJwt } from "passport-jwt";
+import * as emailValidator from "email-validator";
 import User from "../models/User";
 
 const BCRYPT_SALT_ROUNDS = 12;
@@ -18,19 +19,31 @@ const registerStrategyOpts = {
 const registerLocalStrategy = new LocalStrategy(
   registerStrategyOpts,
   async (req, username, password, done) => {
+    const { email, organization } = req.body;
+
     try {
+      if (!emailValidator.validate(email)) {
+        return done(null, false, { message: "incorrect email format" });
+      }
+
       const user = await User.findOne({ username });
       if (user) {
         return done(null, false, { message: "username already taken" });
       } else {
         const hashedPassword = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
-        const email = req.body.email;
-        const user = new User({ username, password: hashedPassword, email });
+        const user = new User({
+          username,
+          password: hashedPassword,
+          email,
+          organization,
+        });
         const savedUser = await user.save();
         return done(null, savedUser);
       }
     } catch (err) {
-      if (err.name === "MongoError" && err.code === 11000) {
+      if (err.name === "ValidationError") {
+        return done(null, false, { message: err.message });
+      } else if (err.name === "MongoError" && err.code === 11000) {
         return done(null, false, { message: "email already taken" });
       } else return done(err);
     }
@@ -66,7 +79,6 @@ const loginLocalStrategy = new LocalStrategy(
 const jwtStrategyOpts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: jwtSecret.secret,
-  issuer: "curation",
 };
 
 const jwtStrategy = new JwtStrategy(

@@ -6,13 +6,23 @@ const userSchema = new Schema({
     type: String,
     unique: true,
     lowercase: true,
+    required: true,
+    trim: true,
   },
-  password: String,
+  password: { type: String, required: true, trim: true },
   username: {
     type: String,
     unique: true,
     lowercase: true,
+    required: true,
+    trim: true,
   },
+  organization: {
+    type: String,
+    required: true,
+  },
+  roles: { type: Array, default: ["curator"] },
+  groups: { type: Array, default: [] },
   status: String,
 });
 

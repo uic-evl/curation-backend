@@ -17,7 +17,11 @@ exports.login = (req, res, next) => {
     else if (info) res.status(400).send(info);
     else {
       const token = jwt.sign(
-        { sub: user.username, iat: new Date().getTime() },
+        {
+          sub: user.username,
+          iat: new Date().getTime(),
+          exp: Math.floor(Date.now() / 1000) + 60 * 60 * 7,
+        },
         jwtSecret.secret
       );
       res.status(200).send({
@@ -30,6 +34,6 @@ exports.login = (req, res, next) => {
 };
 
 exports.find = async (req, res, next) => {
-  const users = await User.find({});
+  const users = await User.find({}, "username email");
   res.status(200).send(users);
 };
