@@ -16,14 +16,17 @@ ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
 
 WORKDIR /root
 ENV PORT=8000
-ENV IMPORTS=/root/curation-backend/imports
+ENV IMPORTS=imports
 ENV PIPELINE=/root/pipeline
 ENV FILES_LOCATION=/mnt/files
 
 RUN git clone https://github.com/uic-evl/curation-backend.git \
     && cd curation-backend \
-    && npm install
+    && npm install \
+    && mkdir imports
 WORKDIR /root/curation-backend
+
+# so it happens that i forgot to create the imports folder, TODO: create the folder from parameter
 
 # docker run -it -p 8000:8000 -v /where/static/files/are:/mnt/files IMAGE_TAG:VERSION sh -c 'npm start'
 # docker run -it -p 8000:8000 -v /mnt/c/Users/jtt/Documents:/mnt/files node:1.0 sh -c 'npm start'
