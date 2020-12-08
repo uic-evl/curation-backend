@@ -1,20 +1,20 @@
-import passport from "passport";
-import jwtSecret from "../config/jwtConfig";
-import jwt from "jsonwebtoken";
-import User from "../models/user";
+import passport from 'passport'
+import jwtSecret from '../config/jwtConfig'
+import jwt from 'jsonwebtoken'
+import User from '../models/user'
 
 exports.register = (req, res, next) => {
-  passport.authenticate("register", (err, user, info) => {
-    if (err) res.status(500).send(err);
-    else if (info) res.status(400).send(info);
-    else res.status(200).send({ message: `User ${user.username} created.` });
-  })(req, res, next);
-};
+  passport.authenticate('register', (err, user, info) => {
+    if (err) res.status(500).send(err)
+    else if (info) res.status(400).send(info)
+    else res.status(200).send({message: `User ${user.username} created.`})
+  })(req, res, next)
+}
 
 exports.login = (req, res, next) => {
-  passport.authenticate("login", (err, user, info) => {
-    if (err) res.status(500).send(err);
-    else if (info) res.status(400).send(info);
+  passport.authenticate('login', (err, user, info) => {
+    if (err) res.status(500).send(err)
+    else if (info) res.status(400).send(info)
     else {
       const token = jwt.sign(
         {
@@ -22,18 +22,18 @@ exports.login = (req, res, next) => {
           iat: new Date().getTime(),
           exp: Math.floor(Date.now() / 1000) + 60 * 60 * 7,
         },
-        jwtSecret.secret
-      );
+        jwtSecret.secret,
+      )
       res.status(200).send({
         username: user.username,
         token,
-        message: "User logged in.",
-      });
+        message: 'User logged in.',
+      })
     }
-  })(req, res, next);
-};
+  })(req, res, next)
+}
 
 exports.find = async (req, res, next) => {
-  const users = await User.find({}, "username email");
-  res.status(200).send(users);
-};
+  const users = await User.find({}, 'username email')
+  res.status(200).send(users)
+}

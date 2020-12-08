@@ -1,7 +1,7 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, {Schema} from 'mongoose'
 
 const userSchema = new Schema({
-  _id: { type: Schema.ObjectId, auto: true },
+  _id: {type: Schema.ObjectId, auto: true},
   email: {
     type: String,
     unique: true,
@@ -9,7 +9,7 @@ const userSchema = new Schema({
     required: true,
     trim: true,
   },
-  password: { type: String, required: true, trim: true },
+  password: {type: String, required: true, trim: true},
   username: {
     type: String,
     unique: true,
@@ -21,9 +21,9 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  roles: { type: Array, default: ["curator"] },
-  groups: { type: Array, default: [] },
+  roles: {type: Array, default: ['curator']},
+  groups: {type: Array, default: []},
   status: String,
-});
+})
 
-module.exports = mongoose.model("user", userSchema);
+module.exports = mongoose.model('user', userSchema)
