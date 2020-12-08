@@ -5,7 +5,7 @@ import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as JwtStrategy } from "passport-jwt";
 import { ExtractJwt } from "passport-jwt";
 import * as emailValidator from "email-validator";
-import User from "../models/User";
+import User from "../models/user";
 
 const BCRYPT_SALT_ROUNDS = 12;
 

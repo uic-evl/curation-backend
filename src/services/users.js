@@ -1,7 +1,7 @@
 import passport from "passport";
 import jwtSecret from "../config/jwtConfig";
 import jwt from "jsonwebtoken";
-import User from "../models/User";
+import User from "../models/user";
 
 exports.register = (req, res, next) => {
   passport.authenticate("register", (err, user, info) => {
