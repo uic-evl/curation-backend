@@ -1,13 +1,24 @@
 import jwtSecret from './jwtConfig'
 import bcrypt from 'bcrypt'
-import passport from 'passport'
 import {Strategy as LocalStrategy} from 'passport-local'
 import {Strategy as JwtStrategy} from 'passport-jwt'
 import {ExtractJwt} from 'passport-jwt'
 import * as emailValidator from 'email-validator'
-import User from '../models/user'
+import userDB from '../resources/users/user-model'
 
 const BCRYPT_SALT_ROUNDS = 12
+
+const blankMessage = field => `${field} cannot be blank`
+const checkUserAttributes = (email, password, username, organization) => {
+  let message = null
+  if (!username) return blankMessage(username)
+  if (!email) return blankMessage(email)
+  if (!password) return blankMessage(password)
+  if (!organization) return blankMessage(organization)
+  if (!emailValidator.validate(email)) return 'incorrect email format'
+
+  return message
+}
 
 const registerStrategyOpts = {
   usernameField: 'username',
@@ -22,29 +33,40 @@ const registerLocalStrategy = new LocalStrategy(
     const {email, organization} = req.body
 
     try {
-      if (!emailValidator.validate(email)) {
-        return done(null, false, {message: 'incorrect email format'})
-      }
+      const message = checkUserAttributes(
+        email,
+        password,
+        username,
+        organization,
+      )
+      if (message !== null) return done(null, false, {message})
 
-      const user = await User.findOne({username})
-      if (user) {
+      // these two validations are redundant with schema but
+      // they are more user friendy
+      let existingUser = await userDB.findOne({username})
+      if (existingUser)
         return done(null, false, {message: 'username already taken'})
-      } else {
-        const hashedPassword = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS)
-        const user = new User({
-          username,
-          password: hashedPassword,
-          email,
-          organization,
-        })
-        const savedUser = await user.save()
-        return done(null, savedUser)
-      }
+      existingUser = await userDB.findOne({email})
+      if (existingUser)
+        return done(null, false, {message: 'email already taken'})
+
+      const hashedPassword = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS)
+      const user = new userDB({
+        username,
+        password: hashedPassword,
+        email,
+        organization,
+      })
+      const savedUser = await user.save()
+      return done(null, savedUser)
     } catch (err) {
       if (err.name === 'ValidationError') {
         return done(null, false, {message: err.message})
       } else if (err.name === 'MongoError' && err.code === 11000) {
-        return done(null, false, {message: 'email already taken'})
+        // Code 11000 warns of duplicated keys, needs to see how to extract
+        // the field violating the schema rule wihout using the text
+        // possible alternative https://github.com/matteodelabre/mongoose-beautiful-unique-validation
+        return done(null, false, {message: 'duplicated email or username'})
       } else return done(err)
     }
   },
@@ -59,7 +81,7 @@ const loginLocalStrategy = new LocalStrategy(
   loginStrategyOpts,
   async (username, password, done) => {
     try {
-      const user = await User.findOne({username})
+      const user = await userDB.findOne({username})
       if (user == null) {
         return done(null, false, {message: 'username does not exist'})
       } else {
@@ -85,7 +107,7 @@ const jwtStrategy = new JwtStrategy(
   jwtStrategyOpts,
   async (jwtPayload, done) => {
     try {
-      const user = await User.findOne({username: jwtPayload.sub})
+      const user = await userDB.findOne({username: jwtPayload.sub})
       if (user) done(null, user)
       else done(null, false)
     } catch (err) {
