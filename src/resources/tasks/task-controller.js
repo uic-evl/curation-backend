@@ -1,6 +1,6 @@
 import taskDB from './task-model'
 import passport from 'passport'
-import {TaskStatus} from '../../utils/constants'
+import {TaskStatus, TaskType} from '../../utils/constants'
 
 export const find = async (req, res, next) => {
   const {username, status, type, taxonomy} = req.query
@@ -88,23 +88,79 @@ export const finishTask = async (req, res, next) => {
   })(req, res, next)
 }
 
-export const create = async (req, res, next) => {
-  const {username, description, assignedTo, type, taxonomy} = req.body
+export const createFromPipeline = async (req, res, next) => {
+  const {documentId, documentName, organization, groupname, taxonomy} = req.body
 
   passport.authenticate('jwt', async (err, user, info) => {
+    if (err) res.send(500).send(err)
+    if (info) res.send(400).send(info)
+
+    const nextUser = getNextUser(organization, groupname)
+    if (!nextUser) res.status(400).send({message: 'no user available for task'})
+
     const newTask = new Task({
-      username,
-      description,
-      assignedTo,
-      type,
+      description: documentName,
+      assignedTo: [nextUser.username],
+      type: TaskType.LABEL,
       status: TaskStatus.ASSIGNED,
       creationDate: Date.now(),
       taxonomy,
       startDate: null,
       endDate: null,
+      documentId,
     })
 
     const savedTask = await newTask.save()
     res.status(200).send(savedTask)
   })(req, res, next)
+}
+
+const getNextUser = (organization, groupname) => {
+  const countTasksPerUser = await taskDB.aggregate([
+    {
+      $unwind: {
+        path: '$assignedTo',
+      },
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'assignedTo',
+        foreignField: 'username',
+        as: 'user',
+      },
+    },
+    {
+      $unwind: {
+        path: '$user',
+      },
+    },
+    {
+      $match: {
+        status: {$ne: TaskStatus.FINISHED},
+        'user.organization': organization,
+        'user.groups': {$in: [groupname]},
+      },
+    },
+    {
+      $group: {
+        _id: {assignedTo: '$assignedTo', _id: '$user._id'},
+        count: {
+          $sum: 1,
+        },
+      },
+    },
+    {
+      $sort: {
+        count: 1,
+      },
+    },
+  ])
+
+  if (!countTasksPerUser) return null
+  else
+    return {
+      _id: countTasksPerUser[0]._id._id,
+      username: countTasksPerUser[0]._id.assignedTo,
+    }
 }
