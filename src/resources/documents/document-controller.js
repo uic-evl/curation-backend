@@ -6,7 +6,7 @@ import {FigureStatus, FigureType} from '../../utils/constants'
 export const getDocumentById = async (req, res, next) => {
   const {id} = req.params
 
-  passport.authenticate('register', (err, user, info) => {
+  passport.authenticate('jwt', (err, user, info) => {
     if (err) res.status(500).send(err)
     if (info) res.status(400).send(info)
 
@@ -18,7 +18,7 @@ export const getDocumentById = async (req, res, next) => {
 export const createFromPipeline = async (req, res, next) => {
   const {input} = req.body.document
 
-  passport.authenticate('register', (err, user, info) => {
+  passport.authenticate('jwt', (err, user, info) => {
     if (err) res.status(500).send(err)
     if (info) res.status(400).send(info)
 

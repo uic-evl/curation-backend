@@ -2,22 +2,22 @@ import passport from 'passport'
 import jwt from 'jsonwebtoken'
 import jwtSecret from '../../config/jwtConfig'
 
-const registerUser = (req, res, next) => {
+export const registerUser = (req, res, next) => {
   passport.authenticate('register', (err, user, info) => {
     if (err) res.status(500).send(err)
-    else if (info) res.status(400).send(info)
-    else
-      res.status(200).send({
-        username: user.username,
-        organization: user.organization,
-        email: user.email,
-        password: '######',
-      })
+    if (info) res.status(400).send(info)
+
+    res.status(200).send({
+      username: user.username,
+      organization: user.organization,
+      email: user.email,
+      password: '######',
+    })
   })(req, res, next)
 }
 
 /** Login user and create token for 7 days */
-const login = (req, res, next) => {
+export const login = (req, res, next) => {
   passport.authenticate('login', (err, user, info) => {
     if (err) res.status(500).send(err)
     else if (info) res.status(400).send(info)
@@ -38,4 +38,15 @@ const login = (req, res, next) => {
   })(req, res, next)
 }
 
-export {registerUser, login}
+export const me = (req, res, next) => {
+  passport.authenticate('jwt', (err, user, info) => {
+    if (err) res.status(500).send(err)
+    if (info) res.status(400).send(info)
+
+    res.status(200).send({
+      username: user.username,
+      email: user.email,
+      organization: user.organization,
+    })
+  })(req, res, next)
+}

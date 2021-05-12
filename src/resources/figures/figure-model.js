@@ -1,6 +1,7 @@
 import mongoose, {Schema} from 'mongoose'
 
 const schema = new Schema({
+  _id: {type: Schema.ObjectId, auto: true},
   name: {type: String, lowercase: true, required: true},
   type: {type: String, required: true},
   state: {type: String, required: true},
