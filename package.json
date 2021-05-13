@@ -4,8 +4,9 @@
   "description": "Back-end for the curation project",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec babel-node src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "NODE_ENV=development nodemon --exec babel-node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prod": "NODE_ENV=production babel-node src/index.js"
   },
   "author": "",
   "license": "ISC",
