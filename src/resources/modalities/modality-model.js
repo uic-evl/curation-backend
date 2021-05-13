@@ -1,11 +1,14 @@
 import mongoose, {Schema} from 'mongoose'
 
-const nodeSchema = new Schema({
+// recursive definition using add
+// https://stackoverflow.com/questions/33825773/recursive-elements-in-schema-mongoose-modelling
+const nodeSchema = new Schema()
+nodeSchema.add({
   _id: {type: Schema.ObjectId, auto: true},
   name: {type: String, required: true},
   shortname: {type: String, default: ''},
   isRow: {type: Boolean, default: false},
-  children: {type: [nodeSchema], default: []},
+  children: [nodeSchema],
 })
 
 const schema = Schema({

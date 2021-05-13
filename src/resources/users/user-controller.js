@@ -1,13 +1,13 @@
 import passport from 'passport'
 import jwt from 'jsonwebtoken'
-import jwtSecret from '../../config/jwtConfig'
+import jwtSecret from '../../utils/jwtConfig'
 
 export const registerUser = (req, res, next) => {
   passport.authenticate('register', (err, user, info) => {
-    if (err) res.status(500).send(err)
-    if (info) res.status(400).send(info)
+    if (err) return res.status(500).send(err)
+    if (info) return res.status(400).send(info)
 
-    res.status(200).send({
+    return res.status(200).send({
       username: user.username,
       organization: user.organization,
       email: user.email,
@@ -40,10 +40,10 @@ export const login = (req, res, next) => {
 
 export const me = (req, res, next) => {
   passport.authenticate('jwt', (err, user, info) => {
-    if (err) res.status(500).send(err)
-    if (info) res.status(400).send(info)
+    if (err) return res.status(500).send(err)
+    if (info) return res.status(400).send(info)
 
-    res.status(200).send({
+    return res.status(200).send({
       username: user.username,
       email: user.email,
       organization: user.organization,

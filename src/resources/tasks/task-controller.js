@@ -1,4 +1,5 @@
 import taskDB from './task-model'
+import userDB from '../users/user-model'
 import passport from 'passport'
 import {TaskStatus, TaskType} from '../../utils/constants'
 
@@ -6,8 +7,8 @@ export const find = async (req, res, next) => {
   const {username, status, type, taxonomy} = req.query
 
   passport.authenticate('jwt', async (err, _, info) => {
-    if (err) res.send(500).send(err)
-    if (info) res.send(400).send(info)
+    if (err) return res.send(500).send(err)
+    if (info) return res.send(400).send(info)
 
     const filters = {}
     if (username) filters.username = username
@@ -16,7 +17,7 @@ export const find = async (req, res, next) => {
     if (taxonomy) filters.taxonomy = taxonomy
 
     const tasks = await taskDB.find(filters).sort({creationDate: -1})
-    res.status(200).send(tasks)
+    return res.status(200).send(tasks)
   })(req, res, next)
 }
 
@@ -25,13 +26,13 @@ export const getById = async (req, res, next) => {
   const {id} = req.params
 
   passport.authenticate('jwt', async (err, _, info) => {
-    if (err) res.send(500).send(err)
-    if (info) res.send(400).send(info)
+    if (err) return res.send(500).send(err)
+    if (info) return res.send(400).send(info)
 
     const task = await taskDB.findById(id)
-    if (!task) res.send(400).send({message: 'task not found'})
+    if (!task) return res.send(400).send({message: 'task not found'})
     else {
-      res.send(200).send(task)
+      return res.send(200).send(task)
     }
   })(req, res, next)
 }
@@ -50,9 +51,9 @@ export const startTask = async (req, res, next) => {
     // be editted?
     if (!task) res.send(400).send({message: 'task not found'})
     if (!task.assignedTo.includes(username))
-      res.send(400).send({message: 'user not assigned to task'})
+      return res.send(400).send({message: 'user not assigned to task'})
     if (task.status !== TaskStatus.ASSIGNED) {
-      res.send(400).send({
+      return res.send(400).send({
         message: 'Cannot start task, task has been started or finished.',
       })
     }
@@ -68,17 +69,17 @@ export const finishTask = async (req, res, next) => {
   const {id} = req.params
 
   passport.authenticate('jwt', async (err, user, info) => {
-    if (err) res.send(500).send(err)
-    if (info) res.send(400).send(info)
+    if (err) return res.send(500).send(err)
+    if (info) return res.send(400).send(info)
 
     const {username} = user
 
     const task = await taskDB.findById(id)
     if (!task) res.send(400).send({message: 'task not found'})
     if (!task.assignedTo.includes(username))
-      res.send(400).send({message: 'user not assigned to task'})
+      return res.send(400).send({message: 'user not assigned to task'})
     if (!task.status !== TaskStatus.IN_PROCESS)
-      res.send(400).send({message: 'task not in process.'})
+      return res.send(400).send({message: 'task not in process.'})
 
     task.endDate = Date.now()
     task.taskPerformer = username
@@ -92,13 +93,14 @@ export const createFromPipeline = async (req, res, next) => {
   const {documentId, documentName, organization, groupname, taxonomy} = req.body
 
   passport.authenticate('jwt', async (err, user, info) => {
-    if (err) res.send(500).send(err)
-    if (info) res.send(400).send(info)
+    if (err) return res.send(500).send(err)
+    if (info) return res.send(400).send(info)
 
-    const nextUser = getNextUser(organization, groupname)
-    if (!nextUser) res.status(400).send({message: 'no user available for task'})
+    const nextUser = await getNextUser(organization, groupname)
+    if (nextUser === null)
+      return res.status(400).send({message: 'no user available for task'})
 
-    const newTask = new Task({
+    const newTask = new taskDB({
       description: documentName,
       assignedTo: [nextUser.username],
       type: TaskType.LABEL,
@@ -111,56 +113,42 @@ export const createFromPipeline = async (req, res, next) => {
     })
 
     const savedTask = await newTask.save()
-    res.status(200).send(savedTask)
+    return res.status(200).send(savedTask)
   })(req, res, next)
 }
 
-const getNextUser = (organization, groupname) => {
-  const countTasksPerUser = await taskDB.aggregate([
-    {
-      $unwind: {
-        path: '$assignedTo',
-      },
-    },
+const getNextUser = async (organization, groupname) => {
+  /** If there are no tasks, return at least one count
+   *  to have the user information. Doing the aggregation
+   *  from the Task collection does not work as there could
+   *  be no tasks; hence, some users would not be counted
+   */
+  const countTasksPerUser = await userDB.aggregate([
+    {$match: {organization: organization, groups: {$in: [groupname]}}},
     {
       $lookup: {
-        from: 'users',
-        localField: 'assignedTo',
-        foreignField: 'username',
-        as: 'user',
+        from: 'tasks',
+        localField: 'username',
+        foreignField: 'assignedTo',
+        as: 'task',
       },
     },
-    {
-      $unwind: {
-        path: '$user',
-      },
-    },
-    {
-      $match: {
-        status: {$ne: TaskStatus.FINISHED},
-        'user.organization': organization,
-        'user.groups': {$in: [groupname]},
-      },
-    },
+    {$unwind: {path: '$task', preserveNullAndEmptyArrays: true}},
+    {$match: {'task.state': {$ne: TaskStatus.FINISHED}}},
+    {$project: {_id: 1, username: 1, task: {$ifNull: ['$task', null]}}},
     {
       $group: {
-        _id: {assignedTo: '$assignedTo', _id: '$user._id'},
-        count: {
-          $sum: 1,
-        },
+        _id: {username: '$username', _id: '$_id'},
+        count: {$sum: {$cond: [{$eq: ['$task', null]}, 0, 1]}},
       },
     },
-    {
-      $sort: {
-        count: 1,
-      },
-    },
+    {$sort: {count: 1}},
   ])
 
-  if (!countTasksPerUser) return null
+  if (countTasksPerUser.length === 0) return null
   else
     return {
       _id: countTasksPerUser[0]._id._id,
-      username: countTasksPerUser[0]._id.assignedTo,
+      username: countTasksPerUser[0]._id.username,
     }
 }

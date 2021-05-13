@@ -9,7 +9,7 @@ import {
   registerLocalStrategy,
   loginLocalStrategy,
   jwtStrategy,
-} from './config/passport'
+} from './utils/auth'
 import getRouter from './routes'
 import errorMiddleware from './utils/error-middleware'
 

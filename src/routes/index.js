@@ -3,6 +3,7 @@ import * as userController from '../resources/users/user-controller'
 import * as taskController from '../resources/tasks/task-controller'
 import * as figureController from '../resources/figures/figure-controller'
 import * as modalityController from '../resources/modalities/modality-controller'
+import * as documentController from '../resources/documents/document-controller'
 
 const opts = {session: false}
 
@@ -19,17 +20,18 @@ const getRouter = passport => {
   router.get('/tasks/:id', auth, taskController.getById)
   router.patch('/tasks/:id/start', auth, taskController.startTask)
   router.patch('/tasks/:id/finish', auth, taskController.finishTask)
-  router.post('/tasks', auth, taskController.create)
+  router.post('/tasks', auth, taskController.createFromPipeline)
 
-  rest.get(
+  router.get(
     '/api/documents/:id/figures',
     auth,
     figureController.getDocumentFigures,
   )
-  rest.get('/figures/:id/subfigures', auth, figureController.getSubfigures)
-  rest.patch('/figures/:id', auth, figureController.updateSubfigure)
+  router.post('/document', auth, documentController.createFromPipeline)
+  router.get('/figures/:id/subfigures', auth, figureController.getSubfigures)
+  router.patch('/figures/:id', auth, figureController.updateSubfigure)
 
-  rest.get('/modalities/:name', modalityController.getModalities)
+  router.get('/modalities/:name', modalityController.getModalities)
 
   return router
 }
