@@ -22,8 +22,9 @@ const getRouter = passport => {
   router.patch('/tasks/:id/finish', auth, taskController.finishTask)
   router.post('/tasks', auth, taskController.createFromPipeline)
 
+  router.get('/documents/:id', auth, documentController.getDocumentById)
   router.get(
-    '/api/documents/:id/figures',
+    '/documents/:id/figures',
     auth,
     figureController.getDocumentFigures,
   )

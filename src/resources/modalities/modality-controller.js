@@ -3,7 +3,7 @@ import modalityDB from './modality-model'
 export const getModalities = async (req, res, next) => {
   const {name} = req.params
 
-  const tree = modalityDB.findOne({name: name})
+  const tree = await modalityDB.findOne({name: name})
   if (!tree) res.status(400).send({message: 'no modalities definition found'})
 
   const rows = []

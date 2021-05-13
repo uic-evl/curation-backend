@@ -43,10 +43,14 @@ export const me = (req, res, next) => {
     if (err) return res.status(500).send(err)
     if (info) return res.status(400).send(info)
 
+    const {authorization} = req.headers
+    const token = authorization.replace('Bearer ', '')
+
     return res.status(200).send({
       username: user.username,
       email: user.email,
       organization: user.organization,
+      token,
     })
   })(req, res, next)
 }

@@ -5,40 +5,41 @@ import {FigureType, FigureStatus} from '../../utils/constants'
 export const getDocumentFigures = async (req, res, next) => {
   const {id} = req.params
 
-  passport.authenticate('register', async (err, user, info) => {
+  passport.authenticate('jwt', async (err, user, info) => {
     if (err) return res.status(500).send(err)
     if (info) return res.status(400).send(info)
 
     const figures = await figureDB
       .find({docId: id, type: FigureType.FIGURE})
       .sort({name: 1})
-    return res.statusCode(200).send(figures)
+    return res.status(200).send(figures)
   })(req, res, next)
 }
 
 export const getSubfigures = async (req, res, next) => {
   const {id} = req.params
 
-  passport.authenticate('register', async (err, user, info) => {
+  passport.authenticate('jwt', async (err, user, info) => {
     if (err) return res.status(500).send(err)
     if (info) return res.status(400).send(info)
 
     const subfigures = await figureDB
       .find({figureId: id, type: FigureType.SUBFIGURE})
       .sort({name: 1})
-    return res.statusCode(200).send(subfigures)
+    return res.status(200).send(subfigures)
   })(req, res, next)
 }
 
 export const updateSubfigure = async (req, res, next) => {
   const {id} = req.params
-  const {values, applyToAll} = req.body
+  const {applyToAll} = req.body
+  const values = req.body
 
-  passport.authenticate('register', async (err, user, info) => {
+  passport.authenticate('jwt', async (err, user, info) => {
     if (err) return res.status(500).send(err)
     if (info) return res.status(400).send(info)
 
-    let subfigure = await Figure.findById(id)
+    let subfigure = await figureDB.findById(id)
     if (subfigure.type !== FigureType.SUBFIGURE)
       return res.status(400).send('only update subfigures')
 
@@ -48,20 +49,17 @@ export const updateSubfigure = async (req, res, next) => {
       if (!values.modalities)
         return res.status(400).send('please add modalities')
 
-      subfigure = {
-        ...subfigure,
-        modalities: values.modalities,
-        needsCropping: values.needsCropping,
-        isCompound: values.isCompound,
-        observations: values.observations,
-        isOvercropped: values.isOvercropped,
-        isMissingSubfigures: values.isMissingSubfigures,
-        numberSubpanes: values.numberSubpanes,
-        closeUp: values.closeUp,
-        isOverfragmented: values.isOverfragmented,
-        state: FigureStatus.REVIEWED,
-        composition: values.composition,
-      }
+      subfigure.modalities = values.modalities
+      subfigure.needsCropping = values.needsCropping
+      subfigure.isCompound = values.isCompound
+      subfigure.observations = values.observations
+      subfigure.isOvercropped = values.isOvercropped
+      subfigure.isMissingSubfigures = values.isMissingSubfigures
+      subfigure.numberSubpanes = values.numberSubpanes
+      subfigure.closeUp = values.closeUp
+      subfigure.isOverfragmented = values.isOverfragmented
+      subfigure.state = FigureStatus.REVIEWED
+      subfigure.composition = values.composition
     }
 
     const savedSubfigure = await subfigure.save()
@@ -70,21 +68,24 @@ export const updateSubfigure = async (req, res, next) => {
     if (applyToAll) {
       await figureDB.updateMany(
         {figureId: figureId, type: FigureType.SUBFIGURE},
-        {state: FigureStatus.REVIEWED},
+        {state: FigureStatus.REVIEWED, modalities: values.modalities},
       )
     }
 
     // check if we need to update the parent figure
     let updatedParent = null
-    const subfiguresToReview = figureDB.find({
+    const subfiguresToReview = await figureDB.find({
       figureId: figureId,
       type: FigureType.SUBFIGURE,
       state: FigureStatus.TO_REVIEW,
     })
-    if (!subfiguresToReview) {
+
+    if (subfiguresToReview.length === 0) {
       const parent = await figureDB.findById(figureId)
-      parent.state = FigureStatus.REVIEWED
-      updatedParent = await parent.save()
+      if (parent.state !== FigureStatus.REVIEWED) {
+        parent.state = FigureStatus.REVIEWED
+        updatedParent = await parent.save()
+      }
     }
 
     return res.status(200).send({

@@ -1,6 +1,7 @@
 import taskDB from './task-model'
 import userDB from '../users/user-model'
 import passport from 'passport'
+import mongoose from 'mongoose'
 import {TaskStatus, TaskType} from '../../utils/constants'
 
 export const find = async (req, res, next) => {
@@ -11,7 +12,7 @@ export const find = async (req, res, next) => {
     if (info) return res.send(400).send(info)
 
     const filters = {}
-    if (username) filters.username = username
+    if (username) filters.assignedTo = {$in: [username]}
     if (status) filters.status = status
     if (type) filters.type = type
     if (taxonomy) filters.taxonomy = taxonomy
@@ -26,13 +27,13 @@ export const getById = async (req, res, next) => {
   const {id} = req.params
 
   passport.authenticate('jwt', async (err, _, info) => {
-    if (err) return res.send(500).send(err)
-    if (info) return res.send(400).send(info)
+    if (err) return res.status(500).send(err)
+    if (info) return res.status(400).send(info)
 
     const task = await taskDB.findById(id)
-    if (!task) return res.send(400).send({message: 'task not found'})
+    if (!task) return res.status(400).send({message: 'task not found'})
     else {
-      return res.send(200).send(task)
+      return res.status(200).send(task)
     }
   })(req, res, next)
 }
@@ -41,19 +42,19 @@ export const startTask = async (req, res, next) => {
   const {id} = req.params
 
   passport.authenticate('jwt', async (err, user, info) => {
-    if (err) res.send(500).send(err)
-    if (info) res.send(400).send(info)
+    if (err) res.status(500).send(err)
+    if (info) res.status(400).send(info)
 
     const {username} = user
 
     const task = await taskDB.findById(id)
     // TODO: i should return some status to tell that the task cannot
     // be editted?
-    if (!task) res.send(400).send({message: 'task not found'})
+    if (!task) res.status(400).send({message: 'task not found'})
     if (!task.assignedTo.includes(username))
-      return res.send(400).send({message: 'user not assigned to task'})
+      return res.status(400).send({message: 'user not assigned to task'})
     if (task.status !== TaskStatus.ASSIGNED) {
-      return res.send(400).send({
+      return res.status(400).send({
         message: 'Cannot start task, task has been started or finished.',
       })
     }
@@ -75,11 +76,11 @@ export const finishTask = async (req, res, next) => {
     const {username} = user
 
     const task = await taskDB.findById(id)
-    if (!task) res.send(400).send({message: 'task not found'})
+    if (!task) return res.status(400).send({message: 'task not found'})
     if (!task.assignedTo.includes(username))
-      return res.send(400).send({message: 'user not assigned to task'})
-    if (!task.status !== TaskStatus.IN_PROCESS)
-      return res.send(400).send({message: 'task not in process.'})
+      return res.status(400).send({message: 'user not assigned to task'})
+    if (task.status !== TaskStatus.IN_PROCESS)
+      return res.status(400).send({message: 'task not in process.'})
 
     task.endDate = Date.now()
     task.taskPerformer = username
@@ -93,8 +94,8 @@ export const createFromPipeline = async (req, res, next) => {
   const {documentId, documentName, organization, groupname, taxonomy} = req.body
 
   passport.authenticate('jwt', async (err, user, info) => {
-    if (err) return res.send(500).send(err)
-    if (info) return res.send(400).send(info)
+    if (err) return res.status(500).send(err)
+    if (info) return res.status(400).send(info)
 
     const nextUser = await getNextUser(organization, groupname)
     if (nextUser === null)
@@ -109,7 +110,7 @@ export const createFromPipeline = async (req, res, next) => {
       taxonomy,
       startDate: null,
       endDate: null,
-      documentId,
+      documentId: documentId,
     })
 
     const savedTask = await newTask.save()

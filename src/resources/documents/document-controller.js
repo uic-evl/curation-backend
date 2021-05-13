@@ -11,7 +11,7 @@ export const getDocumentById = async (req, res, next) => {
     if (info) return res.status(400).send(info)
 
     const document = await documentDB.findById(id)
-    return res.statusCode(200).send(document)
+    return res.status(200).send(document)
   })(req, res, next)
 }
 
