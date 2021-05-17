@@ -266,5 +266,209 @@
                 ]
             }
         ]
+    },
+    {
+        "name": "cord19",
+        "modalities": [
+            {
+                "name": "Radiology",
+                "shortname": "Radiology",
+                "isRow": true,
+                "children": [
+                    {
+                        "name": "X-ray",
+                        "shortname": "X-ray",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "CT/MRU/PET",
+                        "shortname": "CT/MRU/PET",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Ultrasound",
+                        "shortname": "Ultrasound",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Angiography",
+                        "shortname": "Angiography",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Other",
+                        "shortname": "Other",
+                        "isRow": false,
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "name": "Microscopy",
+                "shortname": "Microscopy",
+                "isRow": true,
+                "children": [
+                    {
+                        "name": "Light",
+                        "shortname": "Light",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Fluorescence",
+                        "shortname": "Fluorescence",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Electron",
+                        "shortname": "Electron",
+                        "isRow": false,
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "name": "Photography",
+                "shortname": "Photography",
+                "isRow": false,
+                "children": [
+                    {
+                        "name": "Dermatology/Skin",
+                        "shortname": "Derma/Skin",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Organs/Body Parts",
+                        "shortname": "Organs/Body Parts",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Whole Organisms",
+                        "shortname": "Whole Organisms",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Other",
+                        "shortname": "Other",
+                        "isRow": false,
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "name": "Graphs/Graphics",
+                "shortname": "Graphs/Graphics",
+                "isRow": true,
+                "children": [
+                    {
+                        "name": "Signals/Waves",
+                        "shortname": "Signals/Waves",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Histogram",
+                        "shortname": "Histogram",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Chart/Plot",
+                        "shortname": "Chart/Plot",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Flowchart/Pathway",
+                        "shortname": "Flowchart/Pathway",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "3D Reconstruction",
+                        "shortname": "3D Reconst.",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Other",
+                        "shortname": "Other",
+                        "isRow": false,
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "name": "Experimental Assay",
+                "shortname": "Experimental Assay",
+                "isRow": true,
+                "children": [
+                    {
+                        "name": "Gel",
+                        "shortname": "Gel",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Plate",
+                        "shortname": "Plate",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Microarray",
+                        "shortname": "Microarray",
+                        "isRow": false,
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "name": "Molecular Structure",
+                "shortname": "Molecular Structure",
+                "isRow": true,
+                "children": [
+                    {
+                        "name": "Chemical Structure",
+                        "shortname": "Chemical Str.",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "3D Structure",
+                        "shortname": "3D Str.",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Macromolecule Sequence",
+                        "shortname": "Macromolecule Seq.",
+                        "isRow": false,
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "name": "Other",
+                "shortname": "Other",
+                "isRow": true,
+                "children": [
+                    {
+                        "name": "Other",
+                        "shortname": "Other",
+                        "isRow": false,
+                        "children": []
+                    }
+                ]
+            }
+        ]
     }
 ]
