@@ -14,7 +14,8 @@ const schema = new Schema({
   url: {type: String},
   username: {type: String, default: ''},
   userId: {type: Schema.ObjectId},
-  docId: {type: Schema.ObjectId},
+  documentId: {type: Schema.ObjectId},
+  taxonomy: {type: String},
 })
 
 module.exports = mongoose.model('task', schema)

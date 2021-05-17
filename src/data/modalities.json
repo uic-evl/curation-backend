@@ -1,0 +1,474 @@
+[
+    {
+        "name": "curation",
+        "modalities": [
+            {
+                "name": "Experimental",
+                "shortname": "Experimental",
+                "isRow": false,
+                "children": [
+                    {
+                        "name": "Gel",
+                        "shortname": "Gel",
+                        "isRow": true,
+                        "children": [
+                            {
+                                "name": "Western blot",
+                                "shortname": "Western",
+                                "children": []
+                            },
+                            {
+                                "name": "Northern blot",
+                                "shortname": "Northern",
+                                "children": []
+                            },
+                            {
+                                "name": "RT_PCR",
+                                "shortname": "RT_PCR",
+                                "children": []
+                            },
+                            {
+                                "name": "Other",
+                                "shortname": "Other",
+                                "children": []
+                            }
+                        ]
+                    }, {
+                        "name": "Plate",
+                        "shortname": "Plate",
+                        "isRow": true,
+                        "children": [
+                            {
+                                "name": "Plate",
+                                "shortname": "Plate",
+                                "isRow": false,
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Microscopy",
+                        "isRow": false,
+                        "children": [
+                            {
+                                "name": "Fluorescence",
+                                "shortname": "Fluorescence",
+                                "isRow": true,
+                                "children": [
+                                    {
+                                        "name": "Whole Mount",
+                                        "shortname": "Whole mount",
+                                        "isRow": false,
+                                        "children": []
+                                    },
+                                    {
+                                        "name": "InSitu Hybridization",
+                                        "shortname": "InSitu hyb.",
+                                        "isRow": false,
+                                        "children": []
+                                    },
+                                    {
+                                        "name": "Reporter Genes and Inmunohistochemistry",
+                                        "shortname": "Reporter genes & IHC",
+                                        "isRow": false,
+                                        "children": []
+                                    },
+                                    {
+                                        "name": "EFIC",
+                                        "shortname": "EFIC",
+                                        "isRow": false,
+                                        "children": []
+                                    },
+                                    {
+                                        "name": "Other",
+                                        "shortname": "Other",
+                                        "isRow": false,
+                                        "children": []
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "Light",
+                                "shortname": "Light mic.",
+                                "isRow": true,
+                                "children": [
+                                    {
+                                        "name": "Whole Mount",
+                                        "shortname": "Whole mount",
+                                        "isRow": false,
+                                        "children": []
+                                    },
+                                    {
+                                        "name": "InSitu Hybridization",
+                                        "shortname": "InSitu hyb.",
+                                        "isRow": false,
+                                        "children": []
+                                    },
+                                    {
+                                        "name": "Reporter Genes and Inmunohistochemistry",
+                                        "shortname": "Reporter genes & IHC",
+                                        "isRow": false,
+                                        "children": []
+                                    },
+                                    {
+                                        "name": "Other",
+                                        "shortname": "Other",
+                                        "isRow": false,
+                                        "children": []
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "Electron",
+                                "shortname": "Electron mic.",
+                                "isRow": true,
+                                "children": [
+                                    {
+                                        "name": "Transmission",
+                                        "shortname": "Transmission",
+                                        "isRow": false,
+                                        "children": []
+                                    },
+                                    {
+                                        "name": "Scanning",
+                                        "shortname": "Scanning",
+                                        "isRow": false,
+                                        "children": []
+                                    },                                    
+                                    {
+                                        "name": "Other",
+                                        "shortname": "Other",
+                                        "isRow": false,
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]                                    
+            },
+            {
+                "name": "Graphics",
+                "shortname": "Graphics",
+                "isRow": true,
+                "children": [
+                    {
+                        "name": "Histogram",
+                        "shortname": "Histogram",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Line Chart",
+                        "shortname": "Line chart",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Scatterplot",
+                        "shortname": "Scatterplot",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Graph",
+                        "shortname": "Graph",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Heatmap",
+                        "shortname": "Heatmap",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Other",
+                        "shortname": "Other",
+                        "isRow": false,
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "name": "Organs and Organisms",
+                "shortname": "Organs/Organisms",
+                "isRow": true,
+                "children": [
+                    {
+                        "name": "X-Ray",
+                        "shortname": "X-ray",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "MRI & CT",
+                        "shortname": "MRI & CT",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Photos",
+                        "shortname": "Photos",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Other",
+                        "shortname": "Other",
+                        "isRow": false,
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "name": "Molecular Structure",
+                "shortname": "Molecular struc.",
+                "isRow": true,
+                "children": [
+                    {
+                        "name": "DNA Sequence",
+                        "shortname": "DNA seq.",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Protein Sequence",
+                        "shortname": "Protein seq.",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "3D Structure",
+                        "shortname": "3D struc.",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Chemical Structure",
+                        "shortname": "Chemical struc.",
+                        "isRow": false,
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "name": "Other",
+                "shortname": "Other",
+                "isRow": true,
+                "children": [
+                    {
+                        "name": "Other",
+                        "shortname": "Other",
+                        "isRow": false,
+                        "children": []
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "cord19",
+        "modalities": [
+            {
+                "name": "Radiology",
+                "shortname": "Radiology",
+                "isRow": true,
+                "children": [
+                    {
+                        "name": "X-ray",
+                        "shortname": "X-ray",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "CT/MRU/PET",
+                        "shortname": "CT/MRU/PET",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Ultrasound",
+                        "shortname": "Ultrasound",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Angiography",
+                        "shortname": "Angiography",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Other",
+                        "shortname": "Other",
+                        "isRow": false,
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "name": "Microscopy",
+                "shortname": "Microscopy",
+                "isRow": true,
+                "children": [
+                    {
+                        "name": "Light",
+                        "shortname": "Light",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Fluorescence",
+                        "shortname": "Fluorescence",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Electron",
+                        "shortname": "Electron",
+                        "isRow": false,
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "name": "Photography",
+                "shortname": "Photography",
+                "isRow": false,
+                "children": [
+                    {
+                        "name": "Dermatology/Skin",
+                        "shortname": "Derma/Skin",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Organs/Body Parts",
+                        "shortname": "Organs/Body Parts",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Whole Organisms",
+                        "shortname": "Whole Organisms",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Other",
+                        "shortname": "Other",
+                        "isRow": false,
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "name": "Graphs/Graphics",
+                "shortname": "Graphs/Graphics",
+                "isRow": true,
+                "children": [
+                    {
+                        "name": "Signals/Waves",
+                        "shortname": "Signals/Waves",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Histogram",
+                        "shortname": "Histogram",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Chart/Plot",
+                        "shortname": "Chart/Plot",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Flowchart/Pathway",
+                        "shortname": "Flowchart/Pathway",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "3D Reconstruction",
+                        "shortname": "3D Reconst.",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Other",
+                        "shortname": "Other",
+                        "isRow": false,
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "name": "Experimental Assay",
+                "shortname": "Experimental Assay",
+                "isRow": true,
+                "children": [
+                    {
+                        "name": "Gel",
+                        "shortname": "Gel",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Plate",
+                        "shortname": "Plate",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Microarray",
+                        "shortname": "Microarray",
+                        "isRow": false,
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "name": "Molecular Structure",
+                "shortname": "Molecular Structure",
+                "isRow": true,
+                "children": [
+                    {
+                        "name": "Chemical Structure",
+                        "shortname": "Chemical Str.",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "3D Structure",
+                        "shortname": "3D Str.",
+                        "isRow": false,
+                        "children": []
+                    },
+                    {
+                        "name": "Macromolecule Sequence",
+                        "shortname": "Macromolecule Seq.",
+                        "isRow": false,
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "name": "Other",
+                "shortname": "Other",
+                "isRow": true,
+                "children": [
+                    {
+                        "name": "Other",
+                        "shortname": "Other",
+                        "isRow": false,
+                        "children": []
+                    }
+                ]
+            }
+        ]
+    }
+]

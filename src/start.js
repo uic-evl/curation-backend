@@ -9,8 +9,9 @@ import {
   registerLocalStrategy,
   loginLocalStrategy,
   jwtStrategy,
-} from './config/passport'
+} from './utils/auth'
 import getRouter from './routes'
+import errorMiddleware from './utils/error-middleware'
 
 const startServer = ({port = process.env.PORT} = {}) => {
   startDatabase()
@@ -29,6 +30,7 @@ const startServer = ({port = process.env.PORT} = {}) => {
 
   const router = getRouter(passport)
   app.use('/api', router)
+  app.use(errorMiddleware)
 
   return new Promise(resolve => {
     const server = app.listen(port, () => {

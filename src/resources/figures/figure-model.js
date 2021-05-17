@@ -1,7 +1,7 @@
 import mongoose, {Schema} from 'mongoose'
-import Modality from './modality'
 
 const schema = new Schema({
+  _id: {type: Schema.ObjectId, auto: true},
   name: {type: String, lowercase: true, required: true},
   type: {type: String, required: true},
   state: {type: String, required: true},
@@ -18,8 +18,7 @@ const schema = new Schema({
   docId: {type: Schema.ObjectId, required: true, auto: false},
   figureId: {type: Schema.ObjectId, auto: false, default: null},
   uri: {type: String, required: true},
-  subfigures: {type: Array, default: []},
-  modalities: [Modality.schema],
+  modalities: {type: Array, default: []},
   flag: {type: Boolean, default: false},
   username: {type: String, default: ''},
   composition: {type: String, default: ''},
