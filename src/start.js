@@ -12,6 +12,7 @@ import {
 } from './utils/auth'
 import getRouter from './routes'
 import errorMiddleware from './utils/error-middleware'
+import fs from 'fs'
 
 const startServer = ({port = process.env.PORT} = {}) => {
   startDatabase()
@@ -31,6 +32,17 @@ const startServer = ({port = process.env.PORT} = {}) => {
   const router = getRouter(passport)
   app.use('/api', router)
   app.use(errorMiddleware)
+
+  let credentials = null
+  if (process.env.HTTPS === 'true') {
+    console.log('setting https')
+    const privateKey = fs.readFileSync(process.env.PK, 'utf8')
+    const certificate = fs.readFileSync(process.env.CRT, 'utf8')
+    // const ca = fs.readFileSync(process.env.CA).toString()
+    credentials = {key: privateKey, cert: certificate} // ,ca }
+
+    app = https.createServer(credentials, app)
+  }
 
   return new Promise(resolve => {
     const server = app.listen(port, () => {
